@@ -1,0 +1,79 @@
+library(shiny)
+library(ggplot2)
+
+library(openxlsx)
+setwd("C:/Users/mateu/OneDrive/Pulpit/dane_in?/")
+dane_HDI <- read.csv(file= "C:/Users/mateu/OneDrive/Pulpit/dane_in?/INEQUALITY_ADJUSTED_HDI_PROJ.csv", sep= ",", header=TRUE)
+dane_GDP <- read.xlsx(xlsxFile = "GDP_EU_PROJ.xlsx", sheet = 1, skipEmptyRows = FALSE)
+dane_GINI_INDEX <- read.xlsx(xlsxFile = "GINI_INDEX_PROJ.xlsx", sheet = 1, skipEmptyRows = FALSE)
+dane_INFANT_MORTALITY <- read.xlsx(xlsxFile = "INFANT_MORTALITY_RATE_PROJ.xlsx", sheet = 1, skipEmptyRows = FALSE)
+dane_LIFE_SATISFACTION <- read.xlsx(xlsxFile = "LIFE_SATISFACTION_PROJ.xlsx", sheet = 1, skipEmptyRows = FALSE)
+
+names(dane_HDI) <- c("Ranking", "region", "rok.2010","rok.2011","rok.2012","rok.2013",
+                     "rok.2014","rok.2015","rok.2016","rok.2017","rok.2018","rok.2019")
+
+names(dane_GDP) <- c("region","rok.2009", "rok.2010","rok.2011","rok.2012","rok.2013",
+                     "rok.2014","rok.2015","rok.2016","rok.2017","rok.2018","rok.2019",
+                     "rok.2020","rok.2021")
+
+names(dane_GINI_INDEX) <- c("region","rok.2009", "rok.2010","rok.2011","rok.2012","rok.2013",
+                            "rok.2014","rok.2015","rok.2016","rok.2017","rok.2018","rok.2019",
+                            "rok.2020")
+
+names(dane_INFANT_MORTALITY) <- c("region","rok.2009", "rok.2010","rok.2011","rok.2012","rok.2013",
+                                  "rok.2014","rok.2015","rok.2016","rok.2017","rok.2018","rok.2019")
+
+names(dane_LIFE_SATISFACTION) <- c("region","Ogolna.sat.z.zycia")
+
+
+
+ui <- fluidPage(
+  title = "Zbiory danych",
+  sidebarLayout(
+    sidebarPanel(
+      conditionalPanel(
+        'input.dataset === "diamonds"',
+        checkboxGroupInput("show_vars", "Columns in diamonds to show:",
+                           names(diamonds), selected = names(diamonds))
+      ),
+      conditionalPanel(
+        'input.dataset === "mtcars"',
+        helpText("Click the column header to sort a column.")
+      ),
+      conditionalPanel(
+        'input.dataset === "iris"',
+        helpText("Display 5 records by default.")
+      )
+    ),
+    mainPanel(
+      tabsetPanel(
+        id = 'dataset',
+        tabPanel("diamonds", DT::dataTableOutput("mytable1")),
+        tabPanel("mtcars", DT::dataTableOutput("mytable2")),
+        tabPanel("iris", DT::dataTableOutput("mytable3"))
+      )
+    )
+  )
+)
+
+server <- function(input, output) {
+  
+  # choose columns to display
+  diamonds2 = diamonds[sample(nrow(diamonds), 1000), ]
+  output$mytable1 <- DT::renderDataTable({
+    DT::datatable(diamonds2[, input$show_vars, drop = FALSE])
+  })
+  
+  # sorted columns are colored now because CSS are attached to them
+  output$mytable2 <- DT::renderDataTable({
+    DT::datatable(mtcars, options = list(orderClasses = TRUE))
+  })
+  
+  # customize the length drop-down menu; display 5 rows per page by default
+  output$mytable3 <- DT::renderDataTable({
+    DT::datatable(iris, options = list(lengthMenu = c(5, 30, 50), pageLength = 5))
+  })
+  
+}
+
+shinyApp(ui, server)

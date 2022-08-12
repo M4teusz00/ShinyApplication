@@ -1,0 +1,90 @@
+
+library(openxlsx)
+setwd("C:/Users/mateu/OneDrive/Pulpit/dane_in?/")
+dane_HDI <- read.csv(file= "C:/Users/mateu/OneDrive/Pulpit/dane_in?/INEQUALITY_ADJUSTED_HDI_PROJ.csv", sep= ",", header=TRUE)
+dane_GDP <- read.xlsx(xlsxFile = "GDP_EU_PROJ.xlsx", sheet = 1, skipEmptyRows = FALSE)
+dane_GINI_INDEX <- read.xlsx(xlsxFile = "GINI_INDEX_PROJ.xlsx", sheet = 1, skipEmptyRows = FALSE)
+dane_INFANT_MORTALITY <- read.xlsx(xlsxFile = "INFANT_MORTALITY_RATE_PROJ.xlsx", sheet = 1, skipEmptyRows = FALSE)
+dane_LIFE_SATISFACTION <- read.xlsx(xlsxFile = "LIFE_SATISFACTION_PROJ.xlsx", sheet = 1, skipEmptyRows = FALSE)
+
+names(dane_HDI) <- c("Ranking", "region", "rok.2010","rok.2011","rok.2012","rok.2013",
+                     "rok.2014","rok.2015","rok.2016","rok.2017","rok.2018","rok.2019")
+
+names(dane_GDP) <- c("region","rok.2009", "rok.2010","rok.2011","rok.2012","rok.2013",
+                     "rok.2014","rok.2015","rok.2016","rok.2017","rok.2018","rok.2019",
+                     "rok.2020","rok.2021")
+
+names(dane_GINI_INDEX) <- c("region","rok.2009", "rok.2010","rok.2011","rok.2012","rok.2013",
+                     "rok.2014","rok.2015","rok.2016","rok.2017","rok.2018","rok.2019",
+                     "rok.2020")
+
+names(dane_INFANT_MORTALITY) <- c("region","rok.2009", "rok.2010","rok.2011","rok.2012","rok.2013",
+                            "rok.2014","rok.2015","rok.2016","rok.2017","rok.2018","rok.2019")
+
+names(dane_LIFE_SATISFACTION) <- c("region","Ogolna.sat.z.zycia")
+?names
+
+library(ggplot2)
+library(tidyverse)
+library(plotly)
+
+# mapdata <- map_data("world")   #wspolrzedne ze swiata
+# 
+# mapdata_GDP <- left_join(mapdata, dane_GDP, by="region") 
+# mapdata_GDP_1 <- mapdata_GDP %>% filter(!is.na(mapdata_GDP$rok.2009))   #usuniecie wartosci NA z roku 2009
+# 
+# map_GDP_2009 <- ggplot(mapdata_GDP_1, aes(x=long, y=lat, group=group))+ 
+#   
+#   geom_polygon(aes(fill=rok.2009), color="black") + 
+#   scale_x_continuous(limits = c(-26,45)) +
+#   scale_y_continuous(limits = c(33,71)) +
+#   scale_fill_gradient(name = "2009", low = "yellow", high ="red", na.value = "grey50")+
+#   theme(axis.text.x = element_blank(),
+#         axis.text.y = element_blank(),
+#         axis.ticks = element_blank(),
+#         axis.title.y=element_blank(),
+#         axis.title.x=element_blank(),
+#         rect = element_blank()) 
+# map_GDP_2009
+# 
+# 
+# 
+# mapdata_GINI <- left_join(mapdata, dane_GINI_INDEX, by="region") 
+# mapdata_GINI_1 <- mapdata_GINI %>% filter(!is.na(mapdata_GINI$rok.2013))   #usuniecie wartosci NA z roku 2009
+# 
+# map_GINI_2013 <- ggplot(mapdata_GINI_1, aes(x=long, y=lat, group=group))+ 
+#   
+#   geom_polygon(aes(fill=rok.2013), color="black") + 
+#   scale_x_continuous(limits = c(-26,45)) +
+#   scale_y_continuous(limits = c(33,71)) +
+#   scale_fill_gradient(name = "2013", low = "yellow", high ="red", na.value = "grey")+
+#   theme(axis.text.x = element_blank(),
+#         axis.text.y = element_blank(),
+#         axis.ticks = element_blank(),
+#         axis.title.y=element_blank(),
+#         axis.title.x=element_blank(),
+#         rect = element_blank()) 
+# map_GINI_2013
+# 
+# mapdata_GINI_1 %>%
+#   filter(str_detect(region, "Germany"))
+
+
+
+
+summary(dane_GDP$rok.2021)
+
+
+mean(dane_GDP$rok.2021, na.rm=T) #srednia w Europie
+GDP_2021 <- select(dane_GDP,region,rok.2021) 
+GDP_PL_2021 <- filter(GDP_2021,region=="Poland")
+
+
+dane_GDP_na <- na.omit(dane_GDP)
+
+for (i in 1:nrow(dane_GDP_na)) {
+  dane_GDP_na$roznica[i] <- (dane_GDP_na$rok.2021[i] - dane_GDP_na$rok.2009[i])
+}
+
+
+

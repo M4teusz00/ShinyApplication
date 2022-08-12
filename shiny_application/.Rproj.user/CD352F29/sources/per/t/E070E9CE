@@ -1,0 +1,26 @@
+{
+    "id": "E070E9CE",
+    "path": "C:/Users/mateu/OneDrive/Pulpit/dane_inz/shiny_application/app.R",
+    "project_path": "app.R",
+    "type": "r_source",
+    "hash": "3359610301",
+    "contents": "",
+    "dirty": false,
+    "created": 1649694420264.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "27,0",
+        "scrollLine": "16"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1649694719,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1649694719646,
+    "read_only": false,
+    "read_only_alternatives": []
+}
